@@ -38,6 +38,9 @@
     <ClInclude Include="EventManager.h">
       <Filter>Framework\Event</Filter>
     </ClInclude>
+    <ClInclude Include="Event.hpp">
+      <Filter>Framework\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

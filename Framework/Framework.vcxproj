@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractModule.h" />
+    <ClInclude Include="Event.hpp" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="Pch.h" />
     <ClInclude Include="Singleton.hpp" />
