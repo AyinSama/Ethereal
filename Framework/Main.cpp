@@ -1,9 +1,9 @@
 // 主函数仅用于测试
-#include <iostream>
+#include "Pch.h"
 
 int main() {
 	
-	std::cout << "Test" << std::endl;
+	
 
 	return 0;
 }

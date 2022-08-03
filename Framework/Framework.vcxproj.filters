@@ -4,10 +4,42 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{b32345ca-1db2-4b9a-b2b4-f8bbb859d925}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Module">
+      <UniqueIdentifier>{8e322d10-d9b2-4a0f-b46c-327a0311d04c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pch">
+      <UniqueIdentifier>{993af871-a595-4eb7-9714-95781d85022f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Event">
+      <UniqueIdentifier>{c7373028-8b8d-4c51-b75e-5e2c9ebbaca5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
+    <ClCompile Include="Pch.cpp">
+      <Filter>Pch</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Framework\Event</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AbstractModule.h">
+      <Filter>Framework\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Pch.h">
+      <Filter>Pch</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Framework\Event</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

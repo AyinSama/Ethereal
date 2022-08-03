@@ -1,0 +1,6 @@
+#ifndef _ABSTRACT_MODULE_H_
+#define _ABSTRACT_MODULE_H_
+
+
+
+#endif // _ABSTRACT_MODULE_H_
