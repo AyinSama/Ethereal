@@ -1,5 +1,5 @@
-#ifndef _EVENT_MANAGER_H_
-#define _EVENT_MANAGER_H_
+#ifndef _EVENT_MANAGER_HPP_
+#define _EVENT_MANAGER_HPP_
 
 #include "Pch.h"
 
@@ -40,5 +40,5 @@ private:
 
 };
 
-#endif // _EVENT_MANAGER_H_
+#endif // _EVENT_MANAGER_HPP_
 

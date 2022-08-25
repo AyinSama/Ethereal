@@ -1,6 +1,6 @@
 // 主函数仅用于测试
 #include "Pch.h"
-#include "EventManager.h"
+#include "EventManager.hpp"
 
 class MotionEvent : public Event<MotionEvent> {
 public:
