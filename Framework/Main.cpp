@@ -20,8 +20,9 @@ void handleMotionFunc1(const MotionEvent& event) {
 
 class MotionEventHandler {
 public:
-	MotionEventHandler() { Singleton<EventManager>().getInstance().reg<MotionEvent>(
-		std::bind(&MotionEventHandler::onMotion, this, std::placeholders::_1)); }
+	MotionEventHandler() {
+		BindClassHandler(MotionEvent, this, MotionEventHandler::onMotion);
+	}
 
 	void onMotion(const MotionEvent& event) {
 		std::cout << "on motion func." << std::endl;
@@ -31,9 +32,9 @@ public:
 int main() {
 	
 	EventManager& emgr = Singleton<EventManager>().getInstance();
-	emgr.reg<MotionEvent>(handleMotionFunc1);
+	BindHandler(MotionEvent, handleMotionFunc1)
 
-	MotionEventHandler meg;
+	MotionEventHandler meh;
 
 	MotionEvent me{ 10.125f, 10.456f };
 	emgr.call<MotionEvent>(me);

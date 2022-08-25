@@ -2,6 +2,8 @@
 #define _EVENT_MANAGER_HPP_
 
 #include "Pch.h"
+#define BindHandler(_Event, _Handler) Singleton<EventManager>().getInstance().reg<_Event>(_Handler);
+#define BindClassHandler(_Event, _ClassPtr, _Handler) Singleton<EventManager>().getInstance().reg<_Event>(std::bind(&_Handler, _ClassPtr, std::placeholders::_1))
 
 class EventManager {
 	SingleObject(EventManager);
