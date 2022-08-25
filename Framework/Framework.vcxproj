@@ -84,14 +84,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractModule.h" />
     <ClInclude Include="Event.hpp" />
-    <ClInclude Include="EventManager.h" />
+    <ClInclude Include="EventManager.hpp" />
     <ClInclude Include="Pch.h" />
     <ClInclude Include="Singleton.hpp" />
   </ItemGroup>

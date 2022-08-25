@@ -21,9 +21,6 @@
     <ClCompile Include="Pch.cpp">
       <Filter>Pch</Filter>
     </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Framework\Event</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractModule.h">
@@ -35,7 +32,7 @@
     <ClInclude Include="Singleton.hpp">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
+    <ClInclude Include="EventManager.hpp">
       <Filter>Framework\Event</Filter>
     </ClInclude>
     <ClInclude Include="Event.hpp">
