@@ -1,43 +1,19 @@
 // 主函数仅用于测试
 #include "Pch.h"
-#include "EventManager.hpp"
+#include "ReflectInjector.h"
 
-class MotionEvent : public Event<MotionEvent> {
-public:
-	MotionEvent(float motionX, float motionY) : motionX(motionX), motionY(motionY) {}
-	float getMotionX() const { return this->motionX; }
-	float getMotionY() const { return this->motionY; }
-private:
-	float motionX;
-	float motionY;
-};
-
-void handleMotionFunc1(const MotionEvent& event) {
-	std::cout << "Handler 1" << std::endl;
-	std::cout << "MotionX: " << event.getMotionX() << std::endl;
-	std::cout << "MotionY: " << event.getMotionY() << std::endl;
-}
-
-class MotionEventHandler {
-public:
-	MotionEventHandler() {
-		BindClassHandler(MotionEvent, this, MotionEventHandler::onMotion);
-	}
-
-	void onMotion(const MotionEvent& event) {
-		std::cout << "on motion func." << std::endl;
-	}
-};
+constexpr DWORD PROCESS_ID = 12784;
 
 int main() {
 	
-	EventManager& emgr = Singleton<EventManager>().getInstance();
-	BindHandler(MotionEvent, handleMotionFunc1)
+	AbstractInjector* injector = new ReflectInjector();
+	bool res = injector->inject(PROCESS_ID, "G:\\Github\\Repos\\CSO2-Flux\\Release\\Flux.dll");
+	// bool res = injector->inject(PROCESS_ID, "G:\\CppProjs\\Tests\\Tests\\Debug\\TestDll.dll");
+	if (res)
+		printf("[Ethereal Inject] Inject success :)!");
+	else
+		printf("[Ethereal Inject] Inject failed :(.");
 
-	MotionEventHandler meh;
-
-	MotionEvent me{ 10.125f, 10.456f };
-	emgr.call<MotionEvent>(me);
-
+	delete injector;
 	return 0;
 }

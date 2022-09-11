@@ -7,6 +7,8 @@
 #include <cstdlib>
 #include <functional>
 #include <vector>
+#include <fstream>
+#include <Windows.h>
 
 #include "Singleton.hpp"
 #include "Event.hpp"

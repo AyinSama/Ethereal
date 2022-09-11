@@ -86,12 +86,16 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Pch.cpp" />
+    <ClCompile Include="ReflectInjector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractInjector.h" />
     <ClInclude Include="AbstractModule.h" />
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="EventManager.hpp" />
+    <ClInclude Include="AbstractMemoryManager.h" />
     <ClInclude Include="Pch.h" />
+    <ClInclude Include="ReflectInjector.h" />
     <ClInclude Include="Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>

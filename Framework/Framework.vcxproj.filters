@@ -13,6 +13,15 @@
     <Filter Include="Framework\Event">
       <UniqueIdentifier>{c7373028-8b8d-4c51-b75e-5e2c9ebbaca5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Inject">
+      <UniqueIdentifier>{8cc2b9d6-278a-4cc3-a13e-34e9221ec6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Inject\Injectors">
+      <UniqueIdentifier>{ed5e899d-a74d-44c6-92ef-9b7d2d1686e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Memory">
+      <UniqueIdentifier>{b6deeeca-0daf-4689-8ab8-95f7784c562a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -20,6 +29,9 @@
     </ClCompile>
     <ClCompile Include="Pch.cpp">
       <Filter>Pch</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectInjector.cpp">
+      <Filter>Framework\Inject\Injectors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -37,6 +49,15 @@
     </ClInclude>
     <ClInclude Include="Event.hpp">
       <Filter>Framework\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractInjector.h">
+      <Filter>Framework\Inject</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectInjector.h">
+      <Filter>Framework\Inject\Injectors</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractMemoryManager.h">
+      <Filter>Framework\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
