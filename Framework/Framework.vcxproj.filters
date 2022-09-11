@@ -22,6 +22,9 @@
     <Filter Include="Framework\Memory">
       <UniqueIdentifier>{b6deeeca-0daf-4689-8ab8-95f7784c562a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\Logger">
+      <UniqueIdentifier>{25d1b18b-57a6-42a3-9e78-ff9e105a136d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -32,6 +35,9 @@
     </ClCompile>
     <ClCompile Include="ReflectInjector.cpp">
       <Filter>Framework\Inject\Injectors</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Framework\Logger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="AbstractMemoryManager.h">
       <Filter>Framework\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Framework\Logger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
