@@ -16,14 +16,17 @@
     <Filter Include="Framework\Inject">
       <UniqueIdentifier>{8cc2b9d6-278a-4cc3-a13e-34e9221ec6b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Inject\Injectors">
-      <UniqueIdentifier>{ed5e899d-a74d-44c6-92ef-9b7d2d1686e1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Memory">
       <UniqueIdentifier>{b6deeeca-0daf-4689-8ab8-95f7784c562a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Logger">
       <UniqueIdentifier>{25d1b18b-57a6-42a3-9e78-ff9e105a136d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Memory\Impl">
+      <UniqueIdentifier>{acf09010-8cb3-4346-88b3-3b7610ab2093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Inject\Impl">
+      <UniqueIdentifier>{ed5e899d-a74d-44c6-92ef-9b7d2d1686e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,10 +37,13 @@
       <Filter>Pch</Filter>
     </ClCompile>
     <ClCompile Include="ReflectInjector.cpp">
-      <Filter>Framework\Inject\Injectors</Filter>
+      <Filter>Framework\Inject\Impl</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Framework\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="StandardMemoryManager.cpp">
+      <Filter>Framework\Memory\Impl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -60,13 +66,16 @@
       <Filter>Framework\Inject</Filter>
     </ClInclude>
     <ClInclude Include="ReflectInjector.h">
-      <Filter>Framework\Inject\Injectors</Filter>
+      <Filter>Framework\Inject\Impl</Filter>
     </ClInclude>
     <ClInclude Include="AbstractMemoryManager.h">
       <Filter>Framework\Memory</Filter>
     </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Framework\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardMemoryManager.h">
+      <Filter>Framework\Memory\Impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ Logger& Logger::getInstance() {
 }
 
 // 格式化生成Message
-Message Logger::format(WString format, WString file, LogRank rank, ...) {
+Message Logger::format(WString format, WString file, LogLevel rank, ...) {
 	
 	wchar_t* buffer = new wchar_t[1024];
 	RtlZeroMemory(buffer, 1024 * 2);
@@ -29,13 +29,13 @@ Message Logger::format(WString format, WString file, LogRank rank, ...) {
 
 // 直接打INFO Log
 Logger& Logger::operator<<(const wchar_t* message) {
-	this->queue.push_back(Message(message, LogRank::INFO));
+	this->queue.push_back(Message(message, LogLevel::INFO));
 	return *this;
 }
 
 // 直接打INFO Log
 Logger& Logger::operator<<(const WString message) {
-	this->queue.push_back(Message(message, LogRank::INFO));
+	this->queue.push_back(Message(message, LogLevel::INFO));
 	return *this;
 }
 

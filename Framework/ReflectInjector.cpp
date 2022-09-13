@@ -1,5 +1,6 @@
 #include "Pch.h"
 #include "ReflectInjector.h"
+#include "StandardMemoryManager.h"
 
 void __stdcall ___loader___(ReflectContext* context) {
 	
@@ -67,54 +68,49 @@ void __stdcall ___loader___(ReflectContext* context) {
 	DllMain(reinterpret_cast<HMODULE>(context->payload), DLL_PROCESS_ATTACH, nullptr);
 }
 
-bool ReflectInjector::inject(DWORD pid, const std::string& szModulePath) {
-
-	// 把DLL读入内存
-	std::ifstream modFile(szModulePath, std::ios::binary | std::ios::ate);
-	size_t fileSize = modFile.tellg();
-	BYTE* modBinary = new BYTE[fileSize];
-	modFile.seekg(0, std::ios::beg);
-	modFile.read(reinterpret_cast<char*>(modBinary), fileSize);
-	modFile.close();
-
+bool ReflectInjector::doInject(DWORD pid, void* pModuleBinary) {
+	
 	// PE头
+	char* modBinary = static_cast<char*>(pModuleBinary);
 	IMAGE_DOS_HEADER* pDosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(modBinary);
 	IMAGE_NT_HEADERS* pNtHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(modBinary + pDosHeader->e_lfanew);
 	IMAGE_SECTION_HEADER* pFirstSection = IMAGE_FIRST_SECTION(pNtHeader);
 
 	//判断是否为PE文件
 	if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE || pNtHeader->Signature != IMAGE_NT_SIGNATURE) {
-		printf("[Ethereal Inject] Invalid pe file.");
+		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Invalid pe file.");
 		delete[] modBinary;
 		return false;
 	}
 
 	// 判断运行平台
 	if (pNtHeader->FileHeader.Machine != COMPILE_ARCHITECTURE) {
-		printf("[Ethereal Inject] Invalid architecture.");
+		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Invalid architecture.");
 		delete[] modBinary;
 		return false;
 	}
 
-	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, pid);
-	if (!hProcess) {
-		printf("[Ethereal Inject] OpenProcess failed.");
+	AbstractMemoryManager* memMgr = new StandardMemoryManager(pid);
+	if (!memMgr->isOpened()) {
+		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Cannot open target process!");
 		return false;
 	}
 
 	// 目标进程空间地址
-	BYTE* payload = reinterpret_cast<BYTE*>(VirtualAllocEx(hProcess, nullptr, pNtHeader->OptionalHeader.SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
-	BYTE* pShellcode = reinterpret_cast<BYTE*>(VirtualAllocEx(hProcess, nullptr, PAGE_SIZE, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE));
-	BYTE* pShellcodeParam = reinterpret_cast<BYTE*>(VirtualAllocEx(hProcess, nullptr, sizeof(ReflectContext), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+	// VirtualAllocEx(hProcess, nullptr, pNtHeader->OptionalHeader.SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE)
+	BYTE* payload = reinterpret_cast<BYTE*>(memMgr->allocateMemory(pNtHeader->OptionalHeader.SizeOfImage, PAGE_EXECUTE_READWRITE));
+	BYTE* pShellcode = reinterpret_cast<BYTE*>(memMgr->allocateMemory(PAGE_SIZE, PAGE_EXECUTE_READWRITE));
+	BYTE* pShellcodeParam = reinterpret_cast<BYTE*>(memMgr->allocateMemory(sizeof(ReflectContext)));
 	if (!payload || !pShellcode || !pShellcodeParam) {
-		printf("[Ethereal Inject] Memory allocation error.");
+		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Memory allocation error.");
+		delete memMgr;
 		return false;
 	}
 
 	// 写入PE头，节区头
-	WriteProcessMemory(hProcess, payload, modBinary, pNtHeader->OptionalHeader.SizeOfHeaders, nullptr);
+	memMgr->writeMemory(reinterpret_cast<uintptr_t>(payload), modBinary, pNtHeader->OptionalHeader.SizeOfHeaders);
 	for (int i = 0; i < pNtHeader->FileHeader.NumberOfSections; i++, pFirstSection++) {
-		WriteProcessMemory(hProcess, payload + pFirstSection->VirtualAddress, modBinary + pFirstSection->PointerToRawData, pFirstSection->SizeOfRawData, nullptr);
+		memMgr->writeMemory(reinterpret_cast<uintptr_t>(payload + pFirstSection->VirtualAddress), modBinary + pFirstSection->PointerToRawData, pFirstSection->SizeOfRawData);
 	}
 
 	// 打包参数
@@ -124,12 +120,48 @@ bool ReflectInjector::inject(DWORD pid, const std::string& szModulePath) {
 	context.fnGetProcAddress = GetProcAddress;
 
 	// 写入Shellcode及其参数
-	WriteProcessMemory(hProcess, pShellcode, ___loader___, PAGE_SIZE, nullptr);
-	WriteProcessMemory(hProcess, pShellcodeParam, &context, sizeof(ReflectContext), nullptr);
+	memMgr->writeMemory(reinterpret_cast<uintptr_t>(pShellcode), ___loader___, PAGE_SIZE);
+	memMgr->writeMemory(reinterpret_cast<uintptr_t>(pShellcodeParam), &context, sizeof(ReflectContext));
 
 	// 调用Shellcode
-	HANDLE hThread = CreateRemoteThread(hProcess, nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(pShellcode), pShellcodeParam, 0, nullptr);
+	HANDLE hThread = CreateRemoteThread(memMgr->getProcessHandle(), nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(pShellcode), pShellcodeParam, 0, nullptr);
 
-	delete[] modBinary;
+	delete memMgr;
 	return hThread ? CloseHandle(hThread) : false;
+}
+
+bool ReflectInjector::inject(DWORD pid, const std::string& szModulePath) {
+
+	// 把DLL读入内存
+	std::ifstream modFile(szModulePath, std::ios::binary | std::ios::ate);
+	if (!modFile.is_open()) return false;
+
+	size_t fileSize = modFile.tellg();
+	BYTE* modBinary = new BYTE[fileSize];
+	modFile.seekg(0, std::ios::beg);
+	modFile.read(reinterpret_cast<char*>(modBinary), fileSize);
+	modFile.close();
+
+	bool res = doInject(pid, modBinary);
+	delete[] modBinary;
+
+	return res;
+}
+
+bool ReflectInjector::inject(DWORD pid, const std::wstring& szModulePath) {
+
+	// 把DLL读入内存
+	std::ifstream modFile(szModulePath, std::ios::binary | std::ios::ate);
+	if (!modFile.is_open()) return false;
+
+	size_t fileSize = modFile.tellg();
+	BYTE* modBinary = new BYTE[fileSize];
+	modFile.seekg(0, std::ios::beg);
+	modFile.read(reinterpret_cast<char*>(modBinary), fileSize);
+	modFile.close();
+
+	bool res = doInject(pid, modBinary);
+	delete[] modBinary;
+
+	return res;
 }

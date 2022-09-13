@@ -12,6 +12,7 @@
 
 #include "Singleton.hpp"
 #include "Event.hpp"
+#include "Logger.h"
 
 #endif // _PCH_H_
 

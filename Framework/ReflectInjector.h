@@ -17,6 +17,7 @@ typedef HMODULE(WINAPI *pfnLoadLibraryA)(const char* lpLibFilename);
 typedef FARPROC(WINAPI *pfnGetProcAddress)(HMODULE hModule, LPCSTR lpProcName);
 typedef BOOL(WINAPI *pfnDllEntry)(HMODULE hModule, DWORD dwReason, LPVOID pReserved);
 
+// Shellcode参数结构
 typedef struct _ReflectContext {
 
 	BYTE* payload;
@@ -25,9 +26,17 @@ typedef struct _ReflectContext {
 
 } ReflectContext, *PReflectContext;
 
+/// <summary>
+/// 反射注入，内存注入，自己爱叫啥叫啥，就是手动装载PE
+/// 注意：由于未知原因，使用该注入方法的时候配置要换成Release，不然可能会导致注入失败
+/// </summary>
 class ReflectInjector : public AbstractInjector {
 
 public:
 	bool inject(DWORD pid, const std::string& szModulePath) override;
+	bool inject(DWORD pid, const std::wstring& szModulePath) override;
+
+private:
+	bool doInject(DWORD pid, void* pModuleBinary);
 
 };
