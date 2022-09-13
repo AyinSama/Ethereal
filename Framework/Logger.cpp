@@ -6,17 +6,17 @@ Logger::Logger() {
 }
 
 // 格式化生成Message
-Message Logger::format(WString format, WString file, LogLevel rank, ...) {
+Message Logger::format(WString format, WString file, LogLevel level, ...) {
 	
 	wchar_t* buffer = new wchar_t[1024];
 	RtlZeroMemory(buffer, 1024 * 2);
 
 	va_list args;
-	va_start(args, rank);
+	va_start(args, level);
 	vswprintf(buffer, format.c_str(), args);
 	va_end(args);
 
-	Message msg(buffer, file, rank);
+	Message msg(buffer, file, level);
 	delete[] buffer;
 
 	return msg;
@@ -29,12 +29,12 @@ Logger& Logger::operator<<(const wchar_t* message) {
 }
 
 // 直接打INFO Log
-Logger& Logger::operator<<(const WString message) {
+Logger& Logger::operator<<(const WString& message) {
 	this->queue.push_back(Message(message, LogLevel::INFO));
 	return *this;
 }
 
-Logger& Logger::operator<<(const Message message) {
+Logger& Logger::operator<<(const Message& message) {
 	this->queue.push_back(message);
 	return *this;
 }

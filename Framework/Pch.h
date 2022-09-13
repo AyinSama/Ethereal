@@ -9,6 +9,7 @@
 #include <vector>
 #include <fstream>
 #include <Windows.h>
+#include <cstdint>
 
 #include "Singleton.hpp"
 #include "Event.hpp"
