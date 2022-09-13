@@ -4,7 +4,7 @@
 #include "StandardMemoryManager.h"
 #include "Logger.h"
 
-constexpr DWORD PROCESS_ID = 46680;
+constexpr DWORD PROCESS_ID = 74824;
 
 /// <summary>
 /// 各个模块使用例子
@@ -74,3 +74,5 @@ int main() {
 	FlushLoggerMessageQueue();
 	return 0;
 }
+
+

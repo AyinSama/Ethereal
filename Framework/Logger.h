@@ -17,22 +17,22 @@ enum class LogLevel : unsigned char {
 };
 
 #ifdef _DEBUG
-#define LOG(_FileName, _Content, _Rank) Logger::getInstance() << Message((_Content), (_FileName), (_Rank))
-#define LOG_INFO(_FileName, _Content) LOG(_FileName, _Content, LogLevel::INFO)
-#define LOG_ERROR(_FileName, _Content) LOG(_FileName, _Content, LogLevel::ERROR)
-#define LOG_WARN(_FileName, _Content) LOG(_FileName, _Content, LogLevel::WARN)
-#define LOG_DEBUG(_FileName, _Content) LOG(_FileName, _Content, LogLevel::DEBUG)
+#define LOG(_Content, _FileName, _Rank) Logger::getInstance() << Message((_Content), (_FileName), (_Rank))
+#define LOG_INFO(_Content, _FileName) LOG(_Content, _FileName, LogLevel::INFO)
+#define LOG_ERROR(_Content, _FileName) LOG(_Content, _FileName, LogLevel::ERROR)
+#define LOG_WARN(_Content, _FileName) LOG(_Content, _FileName, LogLevel::WARN)
+#define LOG_DEBUG(_Content, _FileName) LOG(_Content, _FileName, LogLevel::DEBUG)
 #define LOGF_INFO(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::INFO, __VA_ARGS__);
 #define LOGF_ERROR(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::ERROR, __VA_ARGS__);
 #define LOGF_WARN(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::WARN, __VA_ARGS__);
 #define LOGF_DEBUG(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::DEBUG, __VA_ARGS__);
 #define FlushLoggerMessageQueue() Logger::getInstance().flush()
 #else
-#define LOG(_FileName, _Content, _Rank)
-#define LOG_INFO(_FileName, _Content)
-#define LOG_ERROR(_FileName, _Content)
-#define LOG_WARN(_FileName, _Content)
-#define LOG_DEBUG(_FileName, _Content)
+#define LOG(_Content, _FileName, _Rank)
+#define LOG_INFO(_Content, _FileName)
+#define LOG_ERROR(_Content, _FileName)
+#define LOG_WARN(_Content, _FileName)
+#define LOG_DEBUG(_Content, _FileName)
 #define LOGF_INFO(_Format, _FileName, ...)
 #define LOGF_ERROR(_Format, _FileName, ...)
 #define LOGF_WARN(_Format, _FileName, ...)

@@ -130,6 +130,7 @@ bool ReflectInjector::doInject(DWORD pid, void* pModuleBinary) {
 	return hThread ? CloseHandle(hThread) : false;
 }
 
+#pragma warning(disable:4244)
 bool ReflectInjector::inject(DWORD pid, const std::string& szModulePath) {
 
 	// 把DLL读入内存
@@ -147,7 +148,9 @@ bool ReflectInjector::inject(DWORD pid, const std::string& szModulePath) {
 
 	return res;
 }
+#pragma warning(default:4244)
 
+#pragma warning(disable:4244)
 bool ReflectInjector::inject(DWORD pid, const std::wstring& szModulePath) {
 
 	// 把DLL读入内存
@@ -165,3 +168,4 @@ bool ReflectInjector::inject(DWORD pid, const std::wstring& szModulePath) {
 
 	return res;
 }
+#pragma warning(default:4244)
