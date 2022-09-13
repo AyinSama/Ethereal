@@ -16,12 +16,16 @@ enum class LogLevel : unsigned char {
 	DEBUG
 };
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 #define LOG(_FileName, _Content, _Rank) Logger::getInstance() << Message((_Content), (_FileName), (_Rank))
 #define LOG_INFO(_FileName, _Content) LOG(_FileName, _Content, LogLevel::INFO)
 #define LOG_ERROR(_FileName, _Content) LOG(_FileName, _Content, LogLevel::ERROR)
 #define LOG_WARN(_FileName, _Content) LOG(_FileName, _Content, LogLevel::WARN)
 #define LOG_DEBUG(_FileName, _Content) LOG(_FileName, _Content, LogLevel::DEBUG)
+#define LOGF_INFO(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::INFO, __VA_ARGS__);
+#define LOGF_ERROR(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::ERROR, __VA_ARGS__);
+#define LOGF_WARN(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::WARN, __VA_ARGS__);
+#define LOGF_DEBUG(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), _FileName, LogLevel::DEBUG, __VA_ARGS__);
 #define FlushLoggerMessageQueue() Logger::getInstance().flush()
 #else
 #define LOG(_FileName, _Content, _Rank)
@@ -29,6 +33,10 @@ enum class LogLevel : unsigned char {
 #define LOG_ERROR(_FileName, _Content)
 #define LOG_WARN(_FileName, _Content)
 #define LOG_DEBUG(_FileName, _Content)
+#define LOGF_INFO(_Format, _FileName, ...)
+#define LOGF_ERROR(_Format, _FileName, ...)
+#define LOGF_WARN(_Format, _FileName, ...)
+#define LOGF_DEBUG(_Format, _FileName, ...)
 #define FlushLoggerMessageQueue()
 #endif
 
@@ -66,15 +74,10 @@ struct Message {
 
 typedef std::vector<Message> MessageQueue;
 
-class Logger {
+class Logger : public Singleton<Logger> {
+	SingleObject(Logger)
 
 public:
-
-	Logger(const Logger&) = delete;
-	Logger(Logger&&) = delete;
-	void operator=(Logger&) = delete;
-
-	static Logger& getInstance();
 	static Message format(WString format, WString file, LogLevel rank, ...);
 
 	Logger& operator<<(const wchar_t* message);

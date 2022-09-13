@@ -5,11 +5,6 @@ Logger::Logger() {
 
 }
 
-Logger& Logger::getInstance() {
-	static Logger inst;
-	return inst;
-}
-
 // 格式化生成Message
 Message Logger::format(WString format, WString file, LogLevel rank, ...) {
 	
