@@ -1,12 +1,12 @@
+#include "Pch.h"
+
 #ifndef _ABSTRACT_MODULE_H_
 #define _ABSTRACT_MODULE_H_
-
-#include "Pch.h"
 
 /// <summary>
 /// 所有模块的基类
 /// </summary>
-class AbstractModule {
+abstract_class AbstractModule {
 	
 public:
 	/// <summary>

@@ -78,31 +78,30 @@ bool ReflectInjector::doInject(DWORD pid, void* pModuleBinary) {
 
 	//判断是否为PE文件
 	if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE || pNtHeader->Signature != IMAGE_NT_SIGNATURE) {
-		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Invalid pe file.");
+		LOG_ERROR(L"[Ethereal Injector] Invalid pe file.");
 		delete[] modBinary;
 		return false;
 	}
 
 	// 判断运行平台
 	if (pNtHeader->FileHeader.Machine != COMPILE_ARCHITECTURE) {
-		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Invalid architecture.");
+		LOG_ERROR(L"[Ethereal Injector] Invalid architecture.");
 		delete[] modBinary;
 		return false;
 	}
 
 	AbstractMemoryManager* memMgr = new StandardMemoryManager(pid);
 	if (!memMgr->isOpened()) {
-		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Cannot open target process!");
+		LOG_ERROR(L"[Ethereal Injector] Cannot open target process!");
 		return false;
 	}
 
 	// 目标进程空间地址
-	// VirtualAllocEx(hProcess, nullptr, pNtHeader->OptionalHeader.SizeOfImage, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE)
 	BYTE* payload = reinterpret_cast<BYTE*>(memMgr->allocateMemory(pNtHeader->OptionalHeader.SizeOfImage, PAGE_EXECUTE_READWRITE));
 	BYTE* pShellcode = reinterpret_cast<BYTE*>(memMgr->allocateMemory(PAGE_SIZE, PAGE_EXECUTE_READWRITE));
 	BYTE* pShellcodeParam = reinterpret_cast<BYTE*>(memMgr->allocateMemory(sizeof(ReflectContext)));
 	if (!payload || !pShellcode || !pShellcodeParam) {
-		LOG_ERROR(L"ReflectInjector.cpp", L"[Ethereal Injector] Memory allocation error.");
+		LOG_ERROR(L"[Ethereal Injector] Memory allocation error.");
 		delete memMgr;
 		return false;
 	}

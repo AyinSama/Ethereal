@@ -1,12 +1,12 @@
 #pragma once
 #include "Pch.h"
+#include "Util.h"
 
 // wingdi.h Line 118定义了这个宏
 #undef ERROR
 
 // 日志等级
 enum class LogLevel : uint32_t {
-
 	// 生产环境
 	INFO = 0,
 	ERROR,
@@ -17,27 +17,27 @@ enum class LogLevel : uint32_t {
 };
 
 #ifdef _DEBUG
-#define LOG(_Content, _FileName, _Rank) Logger::getInstance() << Message((_Content), (_FileName), (_Rank))
-#define LOG_INFO(_Content, _FileName) LOG((_Content), (_FileName), LogLevel::INFO)
-#define LOG_ERROR(_Content, _FileName) LOG((_Content), (_FileName), LogLevel::ERROR)
-#define LOG_WARN(_Content, _FileName) LOG((_Content), (_FileName), LogLevel::WARN)
-#define LOG_DEBUG(_Content, _FileName) LOG((_Content), (_FileName), LogLevel::DEBUG)
-#define LOGF_INFO(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), (_FileName), LogLevel::INFO, __VA_ARGS__);
-#define LOGF_ERROR(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), (_FileName), LogLevel::ERROR, __VA_ARGS__);
-#define LOGF_WARN(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), (_FileName), LogLevel::WARN, __VA_ARGS__);
-#define LOGF_DEBUG(_Format, _FileName, ...) Logger::getInstance() << Logger::format((_Format), (_FileName), LogLevel::DEBUG, __VA_ARGS__);
+#define LOG(_Content, _Level) Logger::getInstance() << Message((_Content), TEXT(__FILE__), (_Level))
+#define LOG_INFO(_Content) LOG((_Content), LogLevel::INFO)
+#define LOG_ERROR(_Content) LOG((_Content), LogLevel::ERROR)
+#define LOG_WARN(_Content) LOG((_Content), LogLevel::WARN)
+#define LOG_DEBUG(_Content) LOG((_Content), LogLevel::DEBUG)
+#define LOGF_INFO(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::INFO, __VA_ARGS__);
+#define LOGF_ERROR(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::ERROR, __VA_ARGS__);
+#define LOGF_WARN(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::WARN, __VA_ARGS__);
+#define LOGF_DEBUG(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::DEBUG, __VA_ARGS__);
 #define FlushLoggerMessageQueue() Logger::getInstance().flush()
 #else
-#define LOG(_Content, _FileName, _Rank)
-#define LOG_INFO(_Content, _FileName)
-#define LOG_ERROR(_Content, _FileName)
-#define LOG_WARN(_Content, _FileName)
-#define LOG_DEBUG(_Content, _FileName)
-#define LOGF_INFO(_Format, _FileName, ...)
-#define LOGF_ERROR(_Format, _FileName, ...)
-#define LOGF_WARN(_Format, _FileName, ...)
-#define LOGF_DEBUG(_Format, _FileName, ...)
-#define FlushLoggerMessageQueue()
+#define LOG(_Content, _Level) Logger::getInstance() << Message((_Content), TEXT(__FILE__), (_Level))
+#define LOG_INFO(_Content) LOG((_Content), LogLevel::INFO)
+#define LOG_ERROR(_Content) LOG((_Content), LogLevel::ERROR)
+#define LOG_WARN(_Content) LOG((_Content), LogLevel::WARN)
+#define LOG_DEBUG(_Content)
+#define LOGF_INFO(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::INFO, __VA_ARGS__);
+#define LOGF_ERROR(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::ERROR, __VA_ARGS__);
+#define LOGF_WARN(_Format, ...) Logger::getInstance() << Logger::format((_Format), TEXT(__FILE__), LogLevel::WARN, __VA_ARGS__);
+#define LOGF_DEBUG(_Format, ...)
+#define FlushLoggerMessageQueue() Logger::getInstance().flush()
 #endif
 
 typedef std::wstring WString;
@@ -47,8 +47,7 @@ struct Message {
 
 	WString content;
 
-	Message(WString text, WString file, LogLevel rank) : content(text) {
-
+	Message(WString text, WString file, LogLevel rank) {
 		SYSTEMTIME sys;
 		GetLocalTime(&sys);
 
@@ -60,7 +59,18 @@ struct Message {
 		this->content = WString(buffer);
 	}
 
-	Message(WString text, LogLevel rank) : Message(text, L"UnknownFile", LogLevel::INFO) {}
+	Message(const std::string& text, WString file, LogLevel rank) {
+		SYSTEMTIME sys;
+		GetLocalTime(&sys);
+
+		wchar_t buffer[256] = { 0 };
+		RtlZeroMemory(buffer, 256);
+
+		WString wText = Util::cvtWString(text);
+		WString rankString = LogLevelStrings[static_cast<uint32_t>(rank)];
+		wsprintfW(buffer, L"[%4d.%02d.%02d %02d:%02d:%02d][%ws][%ws] %ws\n", sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond, file.c_str(), rankString.c_str(), wText.c_str());
+		this->content = WString(buffer);
+	}
 
 };
 
@@ -72,7 +82,9 @@ class Logger : public Singleton<Logger> {
 public:
 	static Message format(WString format, WString file, LogLevel rank, ...);
 
+	Logger& operator<<(const char* message);
 	Logger& operator<<(const wchar_t* message);
+	Logger& operator<<(const std::string& message);
 	Logger& operator<<(const WString& message);
 	Logger& operator<<(const Message& message);
 	void flush();

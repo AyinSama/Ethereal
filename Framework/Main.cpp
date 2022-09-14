@@ -3,8 +3,9 @@
 #include "ReflectInjector.h"
 #include "StandardMemoryManager.h"
 #include "Logger.h"
+#include "Util.h"
 
-constexpr DWORD PROCESS_ID = 74824;
+constexpr DWORD PROCESS_ID = 35760;
 
 /// <summary>
 /// 各个模块使用例子
@@ -13,17 +14,32 @@ constexpr DWORD PROCESS_ID = 74824;
 int main() {
 
 #pragma region Logger
-
+	
 	// 使用LOG_XXX宏进行无格式化输出
-	LOG_INFO(L"This is a info log.", L"Main.cpp");
-	LOG_DEBUG(L"This is a debug log.", L"Main.cpp");
-	LOG_ERROR(L"This is a error log.", L"Main.cpp");
+	LOG_INFO("This is a info log.");
+	LOG_DEBUG(L"This is a debug log.");
+	LOG_WARN(L"这是一个警告日志");
 
 	// 使用LOGF_XXX宏进行格式化输出
-	LOGF_INFO(L"This is a formatted info log. %d %.2f", L"Main.cpp", 520, 13.14f);
-	LOGF_DEBUG(L"This is a debug log. %X %x", L"Main.cpp", 0x114, 0x514);
+	LOGF_ERROR(L"This is a formatted error log. %d %.2f", 520, 13.14f);
+	LOGF_DEBUG(L"这是一个格式化后的调试日志 %X %x", 0xABC, 0xABC);
 
 	// 该函数会把当前消息队列中的所有消息进行输出
+	FlushLoggerMessageQueue();
+
+	Logger& logger = Logger::getInstance();
+
+	std::wstring wText = Util::cvtWString("Ayin");
+	std::string aText = Util::cvtString(L"Sama");
+
+	// 不推荐直接使用重载运算符，这会使输出的文件名一直都是Logger.cpp，应使用提供好的LOG_XXX和LOGF_XXX等一系列宏
+	logger << wText;
+	logger << aText;
+	logger << __FILE__;
+	logger << __FUNCTION__;
+
+	// 输出中文时请务必使用wchar_t*而不是char*
+	logger << L"中文测试";
 	FlushLoggerMessageQueue();
 
 #pragma endregion
@@ -59,7 +75,11 @@ int main() {
 	/*
 	AbstractInjector* injector = new ReflectInjector();
 
+#ifdef _WIN64
+	bool res = injector->inject(PROCESS_ID, L"G:\\CppProjs\\Tests\\Tests\\x64\\Debug\\TestDll.dll");
+#else
 	bool res = injector->inject(PROCESS_ID, L"G:\\CppProjs\\Tests\\Tests\\Debug\\TestDll.dll");
+#endif
 	if (res)
 		LOG(L"Main.cpp", L"[Ethereal Injector] Inject success :)!", LogLevel::DEBUG);
 	else
@@ -74,14 +94,17 @@ int main() {
 	AbstractMemoryManager* memMgr = new StandardMemoryManager(PROCESS_ID);
 
 	uintptr_t addr = memMgr->allocateMemory(sizeof(uintptr_t));
-	LOGF_DEBUG(L"[Ethereal MemoryManager] Allocate memory: %X", L"Main.cpp", addr);
-
+#ifdef _WIN64
+	LOGF_INFO(L"[Ethereal MemoryManager] Allocate memory: %llX", L"Main.cpp", addr);
+#else
+	LOGF_INFO(L"[Ethereal MemoryManager] Allocate memory: %X", L"Main.cpp", addr);
+#endif
 	uintptr_t buffer = 5201314;
 	memMgr->writeMemory(addr, &buffer, sizeof(buffer));
-	LOGF_DEBUG(L"[Ethereal MemoryManager] Write result: %d", L"Main.cpp", buffer);
+	LOGF_INFO(L"[Ethereal MemoryManager] Write result: %d", L"Main.cpp", buffer);
 
 	memMgr->readMemory(addr, &buffer, sizeof(buffer));
-	LOGF_DEBUG(L"[Ethereal MemoryManager] Read result: %d", L"Main.cpp", buffer);
+	LOGF_INFO(L"[Ethereal MemoryManager] Read result: %d", L"Main.cpp", buffer);
 
 	delete memMgr;
 	*/

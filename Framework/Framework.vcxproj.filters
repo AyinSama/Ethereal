@@ -1,32 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Pch">
+      <UniqueIdentifier>{993af871-a595-4eb7-9714-95781d85022f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thirdparty">
+      <UniqueIdentifier>{6154f56a-8580-4780-a884-3f9ac4d521e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thirdparty\Minhook">
+      <UniqueIdentifier>{82696ed1-9de8-4847-bd03-a6d6deb4b02c}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{b32345ca-1db2-4b9a-b2b4-f8bbb859d925}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Module">
       <UniqueIdentifier>{8e322d10-d9b2-4a0f-b46c-327a0311d04c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pch">
-      <UniqueIdentifier>{993af871-a595-4eb7-9714-95781d85022f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Event">
       <UniqueIdentifier>{c7373028-8b8d-4c51-b75e-5e2c9ebbaca5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework\Inject">
-      <UniqueIdentifier>{8cc2b9d6-278a-4cc3-a13e-34e9221ec6b8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Framework\Memory">
       <UniqueIdentifier>{b6deeeca-0daf-4689-8ab8-95f7784c562a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Logger">
-      <UniqueIdentifier>{25d1b18b-57a6-42a3-9e78-ff9e105a136d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework\Memory\Impl">
       <UniqueIdentifier>{acf09010-8cb3-4346-88b3-3b7610ab2093}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\Inject\Impl">
+    <Filter Include="Framework\Logger">
+      <UniqueIdentifier>{25d1b18b-57a6-42a3-9e78-ff9e105a136d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Injector">
+      <UniqueIdentifier>{8cc2b9d6-278a-4cc3-a13e-34e9221ec6b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Injector\Impl">
       <UniqueIdentifier>{ed5e899d-a74d-44c6-92ef-9b7d2d1686e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Hook">
+      <UniqueIdentifier>{fa61a458-f31e-4a54-a56d-34e7d92d711a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework\Util">
+      <UniqueIdentifier>{4e31efa4-188d-4f66-8314-509a37902b06}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -37,13 +49,16 @@
       <Filter>Pch</Filter>
     </ClCompile>
     <ClCompile Include="ReflectInjector.cpp">
-      <Filter>Framework\Inject\Impl</Filter>
+      <Filter>Framework\Injector\Impl</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Framework\Logger</Filter>
     </ClCompile>
     <ClCompile Include="StandardMemoryManager.cpp">
       <Filter>Framework\Memory\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Framework\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -53,9 +68,6 @@
     <ClInclude Include="Pch.h">
       <Filter>Pch</Filter>
     </ClInclude>
-    <ClInclude Include="Singleton.hpp">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="EventManager.hpp">
       <Filter>Framework\Event</Filter>
     </ClInclude>
@@ -63,10 +75,10 @@
       <Filter>Framework\Event</Filter>
     </ClInclude>
     <ClInclude Include="AbstractInjector.h">
-      <Filter>Framework\Inject</Filter>
+      <Filter>Framework\Injector</Filter>
     </ClInclude>
     <ClInclude Include="ReflectInjector.h">
-      <Filter>Framework\Inject\Impl</Filter>
+      <Filter>Framework\Injector\Impl</Filter>
     </ClInclude>
     <ClInclude Include="AbstractMemoryManager.h">
       <Filter>Framework\Memory</Filter>
@@ -76,6 +88,15 @@
     </ClInclude>
     <ClInclude Include="StandardMemoryManager.h">
       <Filter>Framework\Memory\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook.h">
+      <Filter>Thirdparty\Minhook</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Framework\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.hpp">
+      <Filter>Framework\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

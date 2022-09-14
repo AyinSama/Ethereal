@@ -10,6 +10,9 @@
 #include <fstream>
 #include <Windows.h>
 #include <cstdint>
+#include <string>
+#include <locale>
+#include <codecvt>
 
 #include "Singleton.hpp"
 #include "Event.hpp"

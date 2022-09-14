@@ -22,15 +22,23 @@ Message Logger::format(WString format, WString file, LogLevel level, ...) {
 	return msg;
 }
 
-// 直接打INFO Log
-Logger& Logger::operator<<(const wchar_t* message) {
-	this->queue.push_back(Message(message, LogLevel::INFO));
+Logger& Logger::operator<<(const char* message) {
+	this->queue.push_back(Message(std::string(message), TEXT(__FILE__), LogLevel::INFO));
 	return *this;
 }
 
-// 直接打INFO Log
+Logger& Logger::operator<<(const wchar_t* message) {
+	this->queue.push_back(Message(WString(message), TEXT(__FILE__), LogLevel::INFO));
+	return *this;
+}
+
+Logger& Logger::operator<<(const std::string& message) {
+	this->queue.push_back(Message(message, TEXT(__FILE__), LogLevel::INFO));
+	return *this;
+}
+
 Logger& Logger::operator<<(const WString& message) {
-	this->queue.push_back(Message(message, LogLevel::INFO));
+	this->queue.push_back(Message(message, TEXT(__FILE__), LogLevel::INFO));
 	return *this;
 }
 
@@ -41,9 +49,11 @@ Logger& Logger::operator<<(const Message& message) {
 
 void Logger::flush() {
 	if (this->queue.empty()) return;
+	setlocale(LC_CTYPE, "");
 	for (const Message& msg : this->queue) {
 		wprintf(msg.content.c_str());
 	}
+	setlocale(LC_CTYPE, "C");
 	this->queue.clear();
 }
 
