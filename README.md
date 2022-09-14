@@ -5,3 +5,6 @@ A relatively complete cheat production framework
 
 # Credits
 Reflect Injector --- 雅音宫羽
+
+#Thirdparty
+Minhook [Minhook](https://github.com/TsudaKageyu/minhook)
