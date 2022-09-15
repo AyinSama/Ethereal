@@ -98,6 +98,9 @@
     <ClInclude Include="Singleton.hpp">
       <Filter>Framework\Util</Filter>
     </ClInclude>
+    <ClInclude Include="Forwarder.hpp">
+      <Filter>Framework\Hook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

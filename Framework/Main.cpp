@@ -4,8 +4,20 @@
 #include "StandardMemoryManager.h"
 #include "Logger.h"
 #include "Util.h"
+#include "Forwarder.hpp"
 
 constexpr DWORD PROCESS_ID = 35760;
+
+#pragma region Hook
+typedef int (WINAPI* pfnMessageBoxA)(HWND, LPCSTR, LPCSTR, UINT);
+pfnMessageBoxA pMessageBoxA = nullptr;
+
+int WINAPI MyMessageBoxA(HWND hWnd, LPCSTR lpText, LPCSTR lpCaption, UINT uType) {
+	pMessageBoxA(hWnd, "My MessageBox called.", lpCaption, uType);
+	int ret = pMessageBoxA(hWnd, lpText, lpCaption, uType);
+	return ret;
+}
+#pragma endregion
 
 /// <summary>
 /// 各个模块使用例子
@@ -14,7 +26,7 @@ constexpr DWORD PROCESS_ID = 35760;
 int main() {
 
 #pragma region Logger
-	
+	/*
 	// 使用LOG_XXX宏进行无格式化输出
 	LOG_INFO("This is a info log.");
 	LOG_DEBUG(L"This is a debug log.");
@@ -41,7 +53,7 @@ int main() {
 	// 输出中文时请务必使用wchar_t*而不是char*
 	logger << L"中文测试";
 	FlushLoggerMessageQueue();
-
+	*/
 #pragma endregion
 
 #pragma region EventSystem
@@ -108,6 +120,25 @@ int main() {
 
 	delete memMgr;
 	*/
+#pragma endregion
+
+#pragma region Hook
+
+	Forwarder<int>& forwarder = Forwarder<int>::getInstance();
+	bool res = forwarder.create(0, &MessageBoxA, &MyMessageBoxA, reinterpret_cast<void**>(&pMessageBoxA));
+	LOGF_INFO(L"Status: %d", res);
+
+	forwarder.enable(0);
+	LOGF_INFO(L"Status: %d", res);
+
+	MessageBoxA(nullptr, "AyinSama", "Info", MB_ICONINFORMATION);
+
+	forwarder.disable(0);
+	LOGF_INFO(L"Status: %d", res);
+
+	forwarder.destroy(0);
+	LOGF_INFO(L"Status: %d", res);
+
 #pragma endregion
 
 	FlushLoggerMessageQueue();
