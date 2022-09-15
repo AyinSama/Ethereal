@@ -2,6 +2,8 @@
 #include "Pch.h"
 #include "Util.h"
 
+constexpr size_t BUFFER_COUNT = 1024;
+
 // wingdi.h Line 118定义了这个宏
 #undef ERROR
 
@@ -47,12 +49,12 @@ struct Message {
 
 	WString content;
 
-	Message(WString text, WString file, LogLevel rank) {
+	Message(const WString& text, WString file, LogLevel rank) {
 		SYSTEMTIME sys;
 		GetLocalTime(&sys);
 
-		wchar_t buffer[256] = { 0 };
-		RtlZeroMemory(buffer, 256 * 2);
+		wchar_t buffer[BUFFER_COUNT] = { 0 };
+		RtlZeroMemory(buffer, BUFFER_COUNT * 2);
 
 		WString rankString = LogLevelStrings[static_cast<uint32_t>(rank)];
 		wsprintfW(buffer, L"[%4d.%02d.%02d %02d:%02d:%02d][%ws][%ws] %ws\n", sys.wYear, sys.wMonth, sys.wDay, sys.wHour, sys.wMinute, sys.wSecond, file.c_str(), rankString.c_str(), text.c_str());
@@ -63,8 +65,8 @@ struct Message {
 		SYSTEMTIME sys;
 		GetLocalTime(&sys);
 
-		wchar_t buffer[256] = { 0 };
-		RtlZeroMemory(buffer, 256);
+		wchar_t buffer[BUFFER_COUNT] = { 0 };
+		RtlZeroMemory(buffer, BUFFER_COUNT * 2);
 
 		WString wText = Util::cvtWString(text);
 		WString rankString = LogLevelStrings[static_cast<uint32_t>(rank)];
@@ -80,7 +82,8 @@ class Logger : public Singleton<Logger> {
 	SingleObject(Logger)
 
 public:
-	static Message format(WString format, WString file, LogLevel rank, ...);
+	static Message format(const WString& format, WString file, LogLevel level, ...);
+	static Message format(const std::string& format, WString file, LogLevel level, ...);
 
 	Logger& operator<<(const char* message);
 	Logger& operator<<(const wchar_t* message);

@@ -126,18 +126,18 @@ int main() {
 
 	Forwarder<int>& forwarder = Forwarder<int>::getInstance();
 	bool res = forwarder.create(0, &MessageBoxA, &MyMessageBoxA, reinterpret_cast<void**>(&pMessageBoxA));
-	LOGF_INFO(L"Status: %d", res);
+	LOGF_INFO("Status: %d", res);
 
 	forwarder.enable(0);
-	LOGF_INFO(L"Status: %d", res);
+	LOGF_INFO("Status: %d", res);
 
 	MessageBoxA(nullptr, "AyinSama", "Info", MB_ICONINFORMATION);
 
 	forwarder.disable(0);
-	LOGF_INFO(L"Status: %d", res);
+	LOGF_INFO("Status: %d", res);
 
 	forwarder.destroy(0);
-	LOGF_INFO(L"Status: %d", res);
+	LOGF_INFO("Status: %d", res);
 
 #pragma endregion
 

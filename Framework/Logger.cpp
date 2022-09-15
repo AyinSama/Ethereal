@@ -6,14 +6,14 @@ Logger::Logger() {
 }
 
 // 格式化生成Message
-Message Logger::format(WString format, WString file, LogLevel level, ...) {
+Message Logger::format(const WString& format, WString file, LogLevel level, ...) {
 	
-	wchar_t* buffer = new wchar_t[1024];
-	RtlZeroMemory(buffer, 1024 * 2);
+	wchar_t* buffer = new wchar_t[BUFFER_COUNT];
+	RtlZeroMemory(buffer, BUFFER_COUNT * 2);
 
 	va_list args;
 	va_start(args, level);
-	vswprintf(buffer, format.c_str(), args);
+	vswprintf_s(buffer, BUFFER_COUNT, format.c_str(), args);
 	va_end(args);
 
 	Message msg(buffer, file, level);
@@ -21,6 +21,23 @@ Message Logger::format(WString format, WString file, LogLevel level, ...) {
 
 	return msg;
 }
+
+Message Logger::format(const std::string& format, WString file, LogLevel level, ...) {
+	
+	char* buffer = new char[BUFFER_COUNT];
+	RtlZeroMemory(buffer, BUFFER_COUNT);
+
+	va_list args;
+	va_start(args, level);
+	vsprintf_s(buffer, BUFFER_COUNT, format.c_str(), args);
+	va_end(args);
+
+	Message msg(buffer, file, level);
+	delete[] buffer;
+
+	return msg;
+}
+
 
 Logger& Logger::operator<<(const char* message) {
 	this->queue.push_back(Message(std::string(message), TEXT(__FILE__), LogLevel::INFO));
