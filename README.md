@@ -30,9 +30,11 @@ Reflect Injector --- 雅音宫羽
   - 基于可扩展的Event类, Handler为onXXX(const Event& e)的设计思想
   - 基于观察者模式编写，解耦您的代码
 * Logger
-  - 简单易用，小巧精悍
+  - 日志模块，简单易用，小巧精悍
 * Memory
   - 对特定进程的内存进行操作，如需对接自己的驱动等可继承AbstractMemoryManager另起实现类
 * Injector
   - 把Dll注入进特定进程，目前提供有Reflect的注入方式(反射注入，支持x86/x64)，如需对接自己的驱动等可继承AbstractInjector另起实现类
+* Hook
+  - 基于Minhook库重新封装的Hook模块
   
